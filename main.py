@@ -21,7 +21,8 @@ def do_download(task_id, url):
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info).replace('.webm', '.mp4').replace('.mkv', '.mp4')
+            filename = ydl.prepare_filename(info)
+            filename = filename.rsplit('.', 1)[0] + '.mp4'
             tasks[task_id] = {'status': 'done', 'file': filename, 'title': info.get('title', 'video')}
     except Exception as e:
         tasks[task_id] = {'status': 'error', 'error': str(e)}
@@ -49,9 +50,3 @@ def get_file(task_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-```
-
-**`requirements.txt`:**
-```
-flask
-yt-dlp
