@@ -18,11 +18,15 @@ def do_download(task_id, url):
             'outtmpl': os.path.join(out_path, '%(title)s.%(ext)s'),
             'format': 'bestvideo[height<=720]+bestaudio/best',
             'merge_output_format': 'mp4',
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android'],
+                }
+            },
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info)
-            filename = filename.rsplit('.', 1)[0] + '.mp4'
+            filename = ydl.prepare_filename(info).replace('.webm', '.mp4').replace('.mkv', '.mp4')
             tasks[task_id] = {'status': 'done', 'file': filename, 'title': info.get('title', 'video')}
     except Exception as e:
         tasks[task_id] = {'status': 'error', 'error': str(e)}
