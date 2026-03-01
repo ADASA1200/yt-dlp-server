@@ -20,8 +20,12 @@ def do_download(task_id, url):
             'merge_output_format': 'mp4',
             'extractor_args': {
                 'youtube': {
-                    'player_client': ['android'],
+                    'player_client': ['ios', 'android', 'web_creator'],
+                    'skip': ['hls', 'dash'],
                 }
+            },
+            'http_headers': {
+                'User-Agent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
             },
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
